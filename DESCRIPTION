@@ -1,0 +1,8 @@
+Package: traffic
+Type: Package
+Title: Tools for analyzing vehicle traffic data
+Version: 1.0
+Date: 2016-12-16
+Author: Clark Fitzgerald
+License: MIT
+RoxygenNote: 6.0.1
