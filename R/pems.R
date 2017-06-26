@@ -1,18 +1,15 @@
-#' Read a 30 second raw PeMS file
-#'
-#' Takes a conservative approach to cleaning data by only performing the following steps:
-#' Occupancy greater than 1 is converted to NA
-#'
-#' ID is the station id. Name chosen to match metadata files.
+#' Read 30 Second Raw PeMS File
 #'
 #' @param file Name of file to read
+#' @param posix_timestamp Convert the timestamp to POSIXct
 #' @param lanes Vector of lanes to read. Others ignored.
 #' @param numlanes Total expected number of lanes in file
 #' @param nrows Number of rows to read. Use -1 to read all of them.
 #' @param ... Additional parameters for read.table
 #' @return data.frame
 #' @export
-read30sec = function(file, lanes = 1:2, numlanes = 8, nrows = 10000L, ...)
+read30sec = function(file, posix_timestamp = FALSE, lanes = 1:2
+                     , numlanes = 8, nrows = 10000L, ...)
 {
     ln = data.frame(number = rep(seq.int(numlanes), each = 3))
     ln$name = paste0(rep(c("flow", "occupancy", "speed"), numlanes), ln$number)
@@ -22,16 +19,12 @@ read30sec = function(file, lanes = 1:2, numlanes = 8, nrows = 10000L, ...)
     ln$colclass = ifelse(ln$keep, ln$class, "NULL")
 
     rawdata = read.table(file, header = FALSE, sep = ",", nrows = nrows
-        , col.names = c("timestamp", "ID", ln$colname)
+        , col.names = c("timestamp", "station", ln$colname)
         , colClasses = c("character", "integer", ln$colclass)
         , ...)
 
-    rawdata$timestamp = as.POSIXct(rawdata$timestamp, format = "%m/%d/%Y %H:%M:%S")
-
-    occupancy = grep("occupancy", colnames(rawdata), value = TRUE)
-
-    occupancy_too_big = rawdata[, occupancy] > 1
-    rawdata[, occupancy][occupancy_too_big] = NA
+    if(posix_timestamp)
+        rawdata$timestamp = as.POSIXct(rawdata$timestamp, format = "%m/%d/%Y %H:%M:%S")
 
     rawdata
 }

@@ -2,12 +2,15 @@
 % Please edit documentation in R/pems.R
 \name{read30sec}
 \alias{read30sec}
-\title{Read a 30 second raw PeMS file}
+\title{Read 30 Second Raw PeMS File}
 \usage{
-read30sec(file, lanes = 1:2, numlanes = 8, nrows = 10000L, ...)
+read30sec(file, posix_timestamp = FALSE, lanes = 1:2, numlanes = 8,
+  nrows = 10000L, ...)
 }
 \arguments{
 \item{file}{Name of file to read}
+
+\item{posix_timestamp}{Convert the timestamp to POSIXct}
 
 \item{lanes}{Vector of lanes to read. Others ignored.}
 
@@ -21,9 +24,5 @@ read30sec(file, lanes = 1:2, numlanes = 8, nrows = 10000L, ...)
 data.frame
 }
 \description{
-Takes a conservative approach to cleaning data by only performing the following steps:
-Occupancy greater than 1 is converted to NA
-}
-\details{
-ID is the station id. Name chosen to match metadata files.
+Read 30 Second Raw PeMS File
 }
